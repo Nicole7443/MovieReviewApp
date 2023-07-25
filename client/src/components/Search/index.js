@@ -13,56 +13,53 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
 const Search = () => {
-    const appBar = () => {
-        const navigate = useNavigate();
-    
-        return (
+  const navigate = useNavigate(); 
+  return (
+      <div>
           <AppBar position = "static">
-            <Toolbar>
-              <Button 
-                color='inherit'
-                label = "Landing"
-                onClick = {() => navigate('/')}
-                value = "/"
-              >
-                Landing
-              </Button>
-    
-              <Button 
-                color='inherit'
-                label = "Search"
-                onClick = {() => navigate('/Search')}
-                value = "/Search"
-              >
-                Search
-              </Button>
-    
-              <Button 
-                color='inherit'
-                label = "Review"
-                onClick = {() => navigate('/Review')}
-                value = "/Review"
-              >
-                Review
-              </Button>
-    
-              <Button 
-                color='inherit'
-                label = "MyPage"
-                onClick = {() => navigate('/MyPage')}
-                value = "/MyPage"
-              >
-                MyPage
-              </Button>
-            </Toolbar>
-          </AppBar>
-        )
-      }
-    return (
-        <div>
-            <appBar />
-        </div>
-    )
+          <Toolbar>
+            <Button 
+              color='inherit'
+              label = "Landing"
+              onClick = {() => navigate('/')}
+              value = "/"
+            >
+              Landing
+            </Button>
+  
+            <Button 
+              color='inherit'
+              label = "Search"
+              onClick = {() => navigate('/Search')}
+              value = "/Search"
+            >
+              Search
+            </Button>
+  
+            <Button 
+              color='inherit'
+              label = "Review"
+              onClick = {() => navigate('/Review')}
+              value = "/Review"
+            >
+              Review
+            </Button>
+  
+            <Button 
+              color='inherit'
+              label = "MyPage"
+              onClick = {() => navigate('/MyPage')}
+              value = "/MyPage"
+            >
+              MyPage
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Typography>
+            this is search page
+        </Typography>
+      </div>
+  )
 }
 
 export default Search;
