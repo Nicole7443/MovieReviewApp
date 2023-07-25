@@ -1,19 +1,16 @@
 import * as React from 'react';
-//import all necessary libraries here, e.g., Material-UI Typography, as follows
-import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
-const ReviewTitle = () => {
-
-  //states declarations
-  //constants and functions declarations
-
+const ReviewTitle = ({onTitleChange, onErrorReviewTitle, valueTitle}) => {
   return (
-    <>
-    
-    {/* JSX block */}
-
-
-    </>
+    <TextField 
+      id="add-review-title" 
+      label="Review Title" 
+      variant="standard"
+      value={valueTitle} 
+      error={onErrorReviewTitle} 
+      onChange={onTitleChange}
+    />
   );
 }
 

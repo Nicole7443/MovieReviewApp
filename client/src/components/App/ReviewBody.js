@@ -1,19 +1,23 @@
 import * as React from 'react';
-//import all necessary libraries here, e.g., Material-UI Typography, as follows
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
-const ReviewBody = () => {
-
-  //states declarations
-  //constants and functions declarations
+const ReviewBody = ({onBodyChange, onBodyError, valueBody}) => {
 
   return (
-    <>
-    
-    {/* JSX block */}
-
-
-    </>
+    <Box sx={{'& .MuiTextField-root': { m: 1, width: '64ch'},}}>
+      <div>
+        <TextField
+          id="movie-review-textbox"
+          label="Movie Review"
+          multiline
+          inputProps={{maxlength: 200}}
+          value={valueBody}
+          onChange={onBodyChange}
+          error={onBodyError}
+        />
+      </div>
+    </Box>
   );
 }
 

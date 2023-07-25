@@ -1,11 +1,18 @@
 import React from 'react';
 import Typography from "@mui/material/Typography";
 import { useNavigate } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
 
-const Landing = () => {
+//for App Bar:
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+
+const Search = () => {
     const appBar = () => {
         const navigate = useNavigate();
     
@@ -58,4 +65,4 @@ const Landing = () => {
     )
 }
 
-export default Landing;
+export default Search;
