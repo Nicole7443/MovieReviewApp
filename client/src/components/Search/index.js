@@ -4,16 +4,36 @@ import { useNavigate } from 'react-router-dom';
 
 //for App Bar:
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
+
+import TextField from '@mui/material/TextField';
+import Grid from "@mui/material/Grid";
 
 const Search = () => {
   const navigate = useNavigate(); 
+  
+  const [searchTitle, setSearchedTitle] = React.useState('');
+  const [searchActor, setSearchedActor] = React.useState('');
+  const [searchDirector, setSearchedDirector] = React.useState('');
+  const [testSearch, setTestSearch] = React.useState('');
+
+  const handleSearchedTitleChange = (event) => {
+    setSearchedTitle(event.target.value);
+  };
+
+  const handleSearchedActorChange = (event) => {
+    setSearchedActor(event.target.value);
+  };
+
+  const handleSearchedDirectorChange = (event) => {
+    setSearchedDirector(event.target.value);
+  };
+
+  const handleSearchClick = (event) => {
+    setTestSearch('Submitted');
+  }
+
   return (
       <div>
           <AppBar position = "static">
@@ -55,10 +75,53 @@ const Search = () => {
             </Button>
           </Toolbar>
         </AppBar>
-        <Typography>
-            this is search page
+        <Typography variant="h3" style={{ color: '#2962ff'}}>
+          Search
         </Typography>
-      </div>
+      <Grid container spacing={4} alignItems="center">
+        <Grid item>
+          <TextField 
+            id="search-movie-title" 
+            label="Movie Title" 
+            variant="standard"
+            value={searchTitle}
+            onChange={handleSearchedTitleChange}
+          />
+        </Grid>
+        <Grid item>
+          <TextField 
+              id="search-actor" 
+              label="Actor Name" 
+              variant="standard"
+              value={searchActor}
+              onChange={handleSearchedActorChange}
+            />
+        </Grid>
+        <Grid item>
+          <TextField 
+              id="search-director" 
+              label="Director Name" 
+              variant="standard"
+              value={searchDirector}
+              onChange={handleSearchedDirectorChange}
+            />
+        </Grid>
+        <Grid item>
+          <Button  
+            variant="contained"
+            onClick={handleSearchClick}
+          >
+            Search
+          </Button>
+        </Grid>
+      </Grid>
+      <Typography variant="h5" style={{ color: '#2962ff'}}>
+          You searched for the following results & {testSearch}:
+      </Typography>
+      <Typography variant = "h6">
+        {'Movie: ' + searchTitle + ', ' + 'Actor: ' + searchActor + ', ' + 'Director: ' + searchDirector}
+      </Typography>
+    </div>
   )
 }
 
