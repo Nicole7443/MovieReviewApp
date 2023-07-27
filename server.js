@@ -71,5 +71,43 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
+//POST API for Search Page
+app.post('/api/getSearchResults', (req, res) => {
+	let connection = mysql.createConnection(config);
+	let movieTitle = req.body.movieName;
+	let actorName = req.body.actorName;
+	let directorName = req.body.directorName;
+	let review = req.body.review;
+	let avgScore = req.body.avgScore;
+	let sql = `change this later`;
+	let data = [];
+	
+	if (movieTitle){
+		sql = sql + ` AND movies.movieTitle = ?`;
+		data.push(movieTitle);
+	}
+	if (actorName){
+		sql = sql + ` AND actors.actorName = ?`;
+		data.push(actorName);
+	}
+	if (review){
+		sql = sql + ` AND review.reviewContent = ?`;
+		data.push(review);
+	}
+	if (avgScore){
+		sql = sql + ` AND AVG(review.rating) = ?`;
+		data.push(avgScore);
+	}
+
+	connection.query(sql, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		let string = JSON.stringify(results);
+		res.send({ express: string });
+	});
+	connection.end();
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
