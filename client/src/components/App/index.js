@@ -1,9 +1,8 @@
 import * as React from 'react';
-import {createTheme} from '@mui/material/styles';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from '../Landing';
 import Search from '../Search';
-import MyPage from '../MyPage';
+import MovieInfo from '../MovieInfo';
 import Review from '../Review';
 
 const App = () => {
@@ -13,7 +12,7 @@ const App = () => {
         <Router>
           <div>
             <Routes>
-              <Route path="/MyPage" element={<MyPage />} />
+              <Route path="/MovieInfo" element={<MovieInfo />} />
               <Route path="/Search" element={<Search />} />
               <Route path="/Review" element={<Review />} />
               <Route path="/" element={<Landing />} />

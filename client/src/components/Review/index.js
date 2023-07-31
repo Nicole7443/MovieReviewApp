@@ -10,10 +10,10 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { ThemeProvider } from '@emotion/react';
+import {createTheme} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useNavigate } from 'react-router-dom';
-import {createTheme} from '@mui/material/styles';
 
 const serverURL = "";
 
@@ -180,27 +180,20 @@ const Review = () => {
 
       <Button 
         color='inherit'
-        label = "Review"
-        onClick = {() => navigate('/Review')}
-        value = "/Review"
+        label = "MovieInfo"
+        onClick = {() => navigate('/MovieInfo')}
+        value = "/MovieInfo"
       >
-        Review
-      </Button>
-
-      <Button 
-        color='inherit'
-        label = "MyPage"
-        onClick = {() => navigate('/MyPage')}
-        value = "/MyPage"
-      >
-        MyPage
+        Movie Info
       </Button>
     </Toolbar>
   </AppBar>
-    <Typography variant="h3" style={{ color: '#2962ff'}}>
-        Review a Movie!
-    </Typography>
-    <Grid container spacing={2} alignItems="center">
+    <Divider>
+      <Typography variant="h3" style={{ color: '#2962ff'}} align='center' margin='12px'>
+          Review a Movie
+      </Typography>
+    </Divider>
+    <Grid container spacing={2} alignItems="center" marginLeft='12px'>
       <Grid item>
         <Typography variant="body1" component="body1">
           Select a movie from the dropdown list here.
@@ -276,7 +269,7 @@ const Review = () => {
         }
       </Grid>
     </Grid>
-    <Grid container spacing={2} alignItems="center">
+    <Grid container spacing={2} alignItems="center" marginLeft='12px'>
       <Grid item>
         <Typography variant="body1" component="body1" style ={{textAlign: 'right'}}>
           Rate the movie on a scale from 1 to 5.
@@ -305,10 +298,10 @@ const Review = () => {
         }
       </Grid>
     </Grid>
-    <Grid container direction="column" spacing={1}>
+    <Grid container direction="column" marginLeft='27px'>
       <Grid
         item
-        spacing={0}
+        spacing={2}
         direction="row"
         alignItems="left"
       >
@@ -318,11 +311,11 @@ const Review = () => {
       </Grid>
       <Grid
         item
-        spacing={0}
+        spacing={2}
         direction="row"
         alignItems="left"
       >
-        <Stack spacing={0} direction="row">
+        <Stack spacing={2} direction="row" marginTop='12px'>
           <Button variant="contained" onClick={handleSubmitClick}>Submit</Button>
         </Stack>
       </Grid>
@@ -333,7 +326,7 @@ const Review = () => {
       </Typography>
     </Divider>
     {successfulSubmission &&
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2} margin='12px'>
         <Grid item>
           <Stack direction="row" spacing={1}>
             <Typography variant="body1" sx={{ fontWeight: 'bold'}}>Movie Title:</Typography>

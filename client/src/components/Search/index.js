@@ -6,12 +6,21 @@ import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import { ThemeProvider } from '@emotion/react';
+import {createTheme} from '@mui/material/styles';
 
 import TextField from '@mui/material/TextField';
 import Grid from "@mui/material/Grid";
 
 const Search = () => {
   const navigate = useNavigate(); 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#2962ff',
+      },
+    },
+  });
   
   const [searchTitle, setSearchedTitle] = React.useState('');
   const [searchActor, setSearchedActor] = React.useState('');
@@ -36,6 +45,7 @@ const Search = () => {
 
   return (
       <div>
+        <ThemeProvider theme={theme}>
           <AppBar position = "static">
           <Toolbar>
             <Button 
@@ -49,15 +59,6 @@ const Search = () => {
   
             <Button 
               color='inherit'
-              label = "Search"
-              onClick = {() => navigate('/Search')}
-              value = "/Search"
-            >
-              Search
-            </Button>
-  
-            <Button 
-              color='inherit'
               label = "Review"
               onClick = {() => navigate('/Review')}
               value = "/Review"
@@ -67,11 +68,11 @@ const Search = () => {
   
             <Button 
               color='inherit'
-              label = "MyPage"
-              onClick = {() => navigate('/MyPage')}
-              value = "/MyPage"
+              label = "MovieInfo"
+              onClick = {() => navigate('/MovieInfo')}
+              value = "/MovieInfo"
             >
-              MyPage
+              Movie Info
             </Button>
           </Toolbar>
         </AppBar>
@@ -121,6 +122,7 @@ const Search = () => {
       <Typography variant = "h6">
         {'Movie: ' + searchTitle + ', ' + 'Actor: ' + searchActor + ', ' + 'Director: ' + searchDirector}
       </Typography>
+      </ThemeProvider>
     </div>
   )
 }

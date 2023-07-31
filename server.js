@@ -71,48 +71,30 @@ app.post('/api/loadUserSettings', (req, res) => {
 	connection.end();
 });
 
-//POST API for Search Page
-app.post('/api/getSearchResults', (req, res) => {
+app.post('/api/getTrailers', (req, res) => {
 	let connection = mysql.createConnection(config);
-	let movieName = req.body.movieName;
-	let actorName = req.body.actorName;
-	let directorName = req.body.directorName;
+	let sql = `SELECT id, name, trailer, summary FROM movies WHERE trailer IS NOT NULL AND summary IS NOT NULL`;
 	
-	let sql = 
-		`SELECT movieName, directorName, GROUP_CONCAT(r.reviewContent) as review, AVG(r.reviewScore) as avgScore
-		FROM (
-			SELECT m.name as movieName, m.id, CONCAT(d.first_name, ' ', d.last_name) as DirectorName, CONCAT(a.first_name, ' ', a.last_name) as ActorName
-			FROM movies m, actors a, movies_directors md, review r, directors d, roles
-			WHERE d.id = md.director_id
-			AND m.id = md.movie_id
-			AND m.id = roles.movie_id
-			AND roles.actor_id = a.id
-			AND r.moviesID = m.id
-		) AS M 
-		LEFT JOIN review r ON M.id = r.moviesID
-		GROUP BY movieName, directorName`;
-	let data = [];
+	connection.query(sql, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		let string = JSON.stringify(results);
+		res.send({ express: string });
+	});
+	connection.end();
+});
 
-	if (movieName){
-		sql = sql + ` AND m.name = ?`;
-		data.push(movieName);
-	}
-	if (actorName){
-		sql = sql + ` AND CONCAT(a.first_name, ' ', a.last_name) = ?`;
-		data.push(actorName);
-	}
-	if (review){
-		sql = sql + ` AND review.reviewContent = ?`;
-		data.push(review);
-	}
-	if (avgScore){
-		sql = sql + ` AND AVG(review.reviewScore) = ?`;
-		data.push(avgScore);
-	}
-	if (directorName){
-		sql = sql + ` AND CONCAT(d.first_name, ' ', d.last_name) = ?`;
-	}
-
+app.post('/api/getTopMovies', (req, res) => {
+	let connection = mysql.createConnection(config);
+	let sql = `select id, name as MovieName, ROUND(AVG(reviewScore), 2) as AvgScore
+				from review r, movies m
+				WHERE r.moviesID = m.id
+				AND r.reviewScore IS NOT NULL
+				GROUP BY id, name
+				ORDER BY avgScore DESC
+				LIMIT 5`;
+	
 	connection.query(sql, (error, results, fields) => {
 		if (error) {
 			return console.error(error.message);
