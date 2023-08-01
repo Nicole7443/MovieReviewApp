@@ -11,6 +11,11 @@ import {createTheme} from '@mui/material/styles';
 
 import TextField from '@mui/material/TextField';
 import Grid from "@mui/material/Grid";
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+
+const serverURL = "";
 
 const Search = () => {
   const navigate = useNavigate(); 
@@ -25,7 +30,8 @@ const Search = () => {
   const [searchTitle, setSearchedTitle] = React.useState('');
   const [searchActor, setSearchedActor] = React.useState('');
   const [searchDirector, setSearchedDirector] = React.useState('');
-  const [testSearch, setTestSearch] = React.useState('');
+
+  const [searchResults, setSearchResults] = React.useState([]);
 
   const handleSearchedTitleChange = (event) => {
     setSearchedTitle(event.target.value);
@@ -40,7 +46,35 @@ const Search = () => {
   };
 
   const handleSearchClick = (event) => {
-    setTestSearch('Submitted');
+    if (searchTitle || searchActor || searchDirector) {
+      getMovies();
+    }
+  }
+
+  const getMovies = () => {
+    callGetSearchResults()
+      .then(res => {
+        var parsed = JSON.parse(res.express);
+        setSearchResults(parsed);
+      })
+  }
+
+  const callGetSearchResults = async () => {
+    const url = serverURL + "/api/getSearchResults";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieName: searchTitle,
+        actorName: searchActor,
+        directorName: searchDirector,
+      }),
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
   }
 
   return (
@@ -116,14 +150,53 @@ const Search = () => {
           </Button>
         </Grid>
       </Grid>
-      <Typography variant="h5" style={{ color: '#2962ff'}}>
-          You searched for the following results & {testSearch}:
+      <Typography marginTop='12px' variant="h4" style={{ color: '#2962ff'}}>
+        Results...
       </Typography>
-      <Typography variant = "h6">
-        {'Movie: ' + searchTitle + ', ' + 'Actor: ' + searchActor + ', ' + 'Director: ' + searchDirector}
-      </Typography>
-      </ThemeProvider>
-    </div>
+      <Grid container  alignItems="left">
+        <Grid item>
+          {searchResults.map((result, index) => (
+            <div key = {result.movieName}>
+              <Box margin='12px'>
+                {result.review ? (
+                  <div>
+                    <Typography variant="h6" style={{ color: '#2962ff'}}>
+                      Movie: {result.movieName}
+                    </Typography>
+                    <Typography>
+                      <i style={{ color: 'dark grey'}}>Directed By {result.directorName}</i>
+                    </Typography>
+                    <Typography><strong>Avg Rating: {result.avgScore}</strong></Typography>
+                    <Typography variant="h7"> <i style={{ color: 'dark grey'}}>Reviews:</i></Typography>
+                    <ul>
+                      {result.review.split(',').map((reviewItem, index) => (
+                        <li key={index}>
+                          <Typography variant="body1">{reviewItem}</Typography>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+                  :
+                ( 
+                  <div>
+                    <Typography variant="h6" style={{ color: '#2962ff'}}>
+                      Movie: {result.movieName}
+                    </Typography>
+                    <Typography>
+                      <i style={{ color: 'dark grey'}}>Directed By {result.directorName}</i>
+                    </Typography>
+                  </div>
+                )
+              }
+            </Box>
+            <Divider></Divider>
+          </div>
+        ))}
+      </Grid>
+    </Grid>
+    </ThemeProvider>
+  </div>
   )
 }
 

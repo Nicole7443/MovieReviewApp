@@ -105,5 +105,51 @@ app.post('/api/getTopMovies', (req, res) => {
 	connection.end();
 });
 
+app.post('/api/getSearchResults', (req, res) => {
+	let connection = mysql.createConnection(config);
+	let movieName = req.body.movieName;
+	let actorName = req.body.actorName;
+	let directorName = req.body.directorName;
+	
+	let sql = 
+		`SELECT movieName, directorName, GROUP_CONCAT(DISTINCT r.reviewContent) as review, AVG(r.reviewScore) as avgScore
+		FROM (
+			SELECT m.name as movieName, m.id, CONCAT(d.first_name, ' ', d.last_name) as directorName, CONCAT(a.first_name, ' ', a.last_name) as actorName
+			FROM movies m, actors a, movies_directors md, directors d, roles
+			WHERE d.id = md.director_id
+			AND m.id = md.movie_id
+			AND m.id = roles.movie_id
+			AND roles.actor_id = a.id`
+	
+		let data =[];
+
+		if (movieName) {
+			sql = sql + ` AND m.name = ?`
+			data.push(movieName);
+		}
+		if (directorName){
+			sql = sql + ` AND CONCAT(d.first_name, ' ', d.last_name) = ?`;
+			data.push(directorName);
+		}
+		if (actorName){
+			sql = sql + ` AND CONCAT(a.first_name, ' ', a.last_name) = ?`;
+			data.push(actorName);
+		}
+
+		sql += ` ) AS M 
+		LEFT JOIN review r ON M.id = r.moviesID
+		GROUP BY movieName, directorName`;
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		let string = JSON.stringify(results);
+		res.send({ express: string });
+	});
+	connection.end();
+});
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
