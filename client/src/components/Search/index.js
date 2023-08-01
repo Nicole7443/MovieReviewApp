@@ -13,7 +13,6 @@ import TextField from '@mui/material/TextField';
 import Grid from "@mui/material/Grid";
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 
 const serverURL = "";
 
@@ -184,7 +183,7 @@ const Search = () => {
                       Movie: {result.movieName}
                     </Typography>
                     <Typography>
-                      <i style={{ color: 'dark grey'}}>Directed By {result.directorName}</i>
+                      <i>Directed By {result.directorName}</i>
                     </Typography>
                   </div>
                 )
