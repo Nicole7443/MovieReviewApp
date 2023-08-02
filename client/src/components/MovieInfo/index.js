@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
       
 const serverURL = "";
 
@@ -34,17 +35,77 @@ const MovieInfo = () => {
   const [trailerLink, setTrailerLink] = React.useState('');
   const [topMovies, setTopMovies] = React.useState([]);
   const [watchClicked, setWatchClicked] = React.useState(false);
-  const [summary, setSummary] = React.useState('');
+  const [movies, setMovies] = React.useState([]);
+  const [selectedMovie, setSelectedMovie] = React.useState('');
+  const [newSummary, setNewSummary] = React.useState('');
+
+  const getMovies = () => {
+    callApiGetMovies()
+      .then(res => {
+        var parsed = JSON.parse(res.express);
+        setMovies(parsed);
+      })
+  }
+
+  React.useEffect(() => {
+    getMovies();
+  }, []);
+
+  const callApiGetMovies = async () => {
+    const url = serverURL + "/api/getMovies";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
 
   const handleSelectMovieTrailerChange = (event) => {
     setSelectedTrailer(event.target.value);
-    setSelectedMovieName(movieTrailers.find(movie => movie.id == event.target.value).name);
+  };
+
+  const handleNewSummaryChange = (event) => {
+    setNewSummary(event.target.value);
   };
 
   const handleWatchClick = (event) => {
-    setTrailerLink(movieTrailers.find(movie => movie.id == selectedTrailer).trailer);
-    setSummary(movieTrailers.find(movie => movie.id == selectedTrailer).summary);
-    setWatchClicked(true);
+    const movieTrailerItem = movieTrailers.find(movie => movie.id === selectedTrailer);
+    if (movieTrailerItem) {
+      setTrailerLink(movieTrailerItem.trailer);
+      setWatchClicked(true);
+    }
+  };
+
+  const handleAddSummaryClick = (event) => {
+    if (selectedMovie && newSummary) {
+      callAddSummary();
+      setWatchClicked(false);
+    }
+  };
+
+  const callAddSummary = async () => {
+    const url = serverURL + "/api/addSummary";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        summary: newSummary,
+        id: selectedMovie,
+      })
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
+
+  const handleSelectMovieChange = (event) => {
+    setSelectedMovie(event.target.value);
   };
 
   const getTrailers = () => {
@@ -139,6 +200,7 @@ const MovieInfo = () => {
         <Stack direction="row" spacing={2}>
           <Grid container spacing={2} alignItems="left" direction="column" margin='12px'>
             <Grid item>
+              <Typography>Select a movie that has a trailer below and click Watch to view its trailer.</Typography>
               <Stack spacing={2} direction="row">
                 <Box>
                   <FormControl sx={{minWidth: 228}}>
@@ -158,12 +220,49 @@ const MovieInfo = () => {
                         )
                       }
                       )
-                      } 
+                      }
                     </Select>
                   </FormControl>
                 </Box>
                 <Button variant="contained" onClick={handleWatchClick}> Watch</Button>
               </Stack>
+              <Grid item marginTop='20px'>
+                <Typography variant="body1">Add or update the summary for any movie selected from the list below.</Typography>
+                <Stack spacing={2} direction="column">
+                  <Stack spacing={2} direction="row">
+                  <Box>
+                    <FormControl sx={{minWidth: 228}}>
+                      <InputLabel id="select-label">Select Movie</InputLabel>
+                      <Select
+                        labelID="update-summary"
+                        id="add-summary"
+                        value={selectedMovie}
+                        label="Select Movie"
+                        onChange={handleSelectMovieChange}
+                        style={{ height: '50px' }}
+                        autoWidth={true}
+                      >
+                        {movies.map((movieItem) => {
+                          return (
+                            <MenuItem value={movieItem.id}>{movieItem.name}</MenuItem>
+                          )
+                        }
+                        )
+                        } 
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <TextField 
+                    id="add-summary" 
+                    label="Summary" 
+                    variant="standard"
+                    value={newSummary}
+                    onChange={handleNewSummaryChange}
+                  />
+                  </Stack>
+                  <Button variant="contained" onClick={handleAddSummaryClick}>Add Summary</Button>
+                </Stack>
+              </Grid>
             </Grid>
             <Grid item marginTop='12px'>
               <Box sx={{width: 'fit-content'}}>
@@ -201,15 +300,6 @@ const MovieInfo = () => {
                     title="Trailer"
                     allowFullScreen>
                   </iframe>
-                </Grid>
-                <Grid item>
-                  <Divider style={{ backgroundColor: '#2962ff', height: 2, width:560, marginTop: '10px'}}></Divider>
-                  <Typography variant="h5" style={{ color: '#2962ff'}}>
-                    Movie Summary
-                  </Typography>
-                  <Typography variant="body1" >
-                    {summary}
-                  </Typography>
                 </Grid>
               </div>
             }
