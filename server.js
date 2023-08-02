@@ -53,6 +53,26 @@ app.post('/api/getMovies', (req, res) => {
 	connection.end();
 });
 
+app.post('/api/addSummary', (req, res) => {
+	let connection = mysql.createConnection(config);
+	let summary = req.body.summary;
+	let id = req.body.id;
+
+	let sql = `UPDATE movies SET summary = ? WHERE id = ?`;
+
+	let data = [summary, id];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let string = JSON.stringify(results);
+		res.send({ express: string });
+	});
+	connection.end();
+});
+
 app.post('/api/loadUserSettings', (req, res) => {
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
@@ -73,7 +93,7 @@ app.post('/api/loadUserSettings', (req, res) => {
 
 app.post('/api/getTrailers', (req, res) => {
 	let connection = mysql.createConnection(config);
-	let sql = `SELECT id, name, trailer, summary FROM movies WHERE trailer IS NOT NULL AND summary IS NOT NULL`;
+	let sql = `SELECT id, name, trailer FROM movies WHERE trailer IS NOT NULL`;
 	
 	connection.query(sql, (error, results, fields) => {
 		if (error) {
